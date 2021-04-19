@@ -1,0 +1,28 @@
+-- insomnia core -- to test API
+
+************Project Setup *****************************
+-- install nestjs cli.
+    npm i -g @nestjs/cli
+
+    run command: npm run start:dev -- for development.
+
+****************************************************
+** Architecture Of NestJS **************************
+
+@Module({ -- this is decorator
+  imports: [],
+  controllers: [AppController],
+  providers: [AppService],
+})
+
+-- like a function on top of the class - so they can do things for the class.
+
+Module: part of the application.
+-- Controllers: take URL and execute functions.
+
+ @Get('/hello') - must be right before the function it decorate.
+
+ -- why need services?
+    -- more structured - architecture.
+    -- separate logic business - serivices with  - controller - in charge of process url
+

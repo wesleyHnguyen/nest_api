@@ -26,3 +26,87 @@ Module: part of the application.
     -- more structured - architecture.
     -- separate logic business - serivices with  - controller - in charge of process url
 
+*********************************************
+**** Movie Controller ***********************
+-- we can generate things in nestjs:
+  -- example: nest generate controller (nest g co)
+
+in nestjs: if you want something you have to ask for it.
+
+@Get('/:id')
+getOne(@Param('id') movieId: string) 
+--> we want to ask for 'id' parameter - and save it to 'movieId' as a string.
+
+****************************************************
+************** Movie Services **********************
+-- Do one thing and do it well.
+-- Controller - responsible for url mapping, querystring+body parsing.
+-- Services - responsible for logic business
+  -- nest g s --
+
+******************* DTOs and Validation *********************
+-- DTO : Data transfer object -- validate the object
+
+- /movies/dto/create-movie.dto.ts:
+  export class CreateMovieDto{
+    readonly title: string;
+    readonly year: number;
+    readonly genres: string[];
+} -- define what people can send to create a movie.
+
+-- Create a validation pipe - like a middleware.
+
+-- must install two packages: $npm install class-validator class-transformer
+app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,            -->
+      forbidNonWhitelisted: true, --> tell that which field should not be passed from the input. 
+      transform: true  --> transform input data to what we want it to be.
+    })
+  );
+
+  --> Create a UpdateMovieDto
+
+  export class UpdateMovieDto{
+    @IsString()
+    readonly title**?**: string; --> make it not required.
+    
+    @IsNumber() --> class validator
+    readonly year?: number;
+
+    @IsString({ each: true })
+    readonly genres?: string[];
+}
+
+
+ @Patch('/:id')
+    patch(@Param('id') 
+        **movieId: number -- class transform***, 
+        @Body() updateData: **UpdateMovieDto) {}
+
+@Get(@Req req, @Res res) -> use these decorator to access two req, res object of express(nestjs run on expressjs)
+    getAll(): Movie[]{    -> but should not use this -> we can switch to fastify.
+        return  this.moviesService.getAll();
+    }
+
+***********************************************************
+************************** Unit Testing *******************
+
+
+***********************************************
+*************** E2E Testing********************
+-- Must make the test the same as the real application
+
+change beforeEach(create new app for each test) -> beforeAll: one app created
+
+
+ app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true
+      })
+    )
+
+
